@@ -239,7 +239,9 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
 
     def trace_display(self,highlight=[], nfa_name = '', size='8,5'):             
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
-        f.attr(rankdir='LR', size=size)
+        f.attr(rankdir='LR')
+        if size!=None:
+          f.attr(size=size)
  
         f.attr('node', shape='point')
         f.node('')
@@ -280,7 +282,9 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
 
     def display(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'): 
         f = Digraph('finite automata '+label, filename='nfa.gv')
-        f.attr(rankdir='LR', size=size)
+        f.attr(rankdir='LR')
+        if size!=None:
+          f.attr(size=size)
  
         f.attr('node', shape='point')
         f.node('')
