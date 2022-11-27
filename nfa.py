@@ -8,7 +8,6 @@ from IPython.display import clear_output
 import pandas as pd
 from IPython.display import display, Markdown
 
-
 from bcolors import bcolors
 
 class NFA: # Non-Deterministic Finete Automata
