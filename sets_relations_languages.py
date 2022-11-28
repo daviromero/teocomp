@@ -1,6 +1,5 @@
 from graphviz import Digraph
 import ipywidgets as widgets
-from IPython.display import clear_output
 from IPython.display import display, Markdown
 from random import randrange
 import pandas as pd

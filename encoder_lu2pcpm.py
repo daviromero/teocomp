@@ -1,9 +1,4 @@
-import pandas as pd
-from IPython.display import HTML
-from IPython.display import display
-import pandas as pd
 from pcpm import PCPM
-
 
 class Encoder_LU_to_PCPM:
   def __init__(self, mtndmf, word, delimiter='#'):

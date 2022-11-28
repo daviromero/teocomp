@@ -6,7 +6,7 @@ from time import sleep
 import ipywidgets as widgets
 from IPython.display import clear_output
 import pandas as pd
-from IPython.display import display, Markdown
+from IPython.display import display
 from bcolors import bcolors
 
 class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions

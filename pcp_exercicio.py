@@ -1,6 +1,5 @@
 from IPython.display import display
 import ipywidgets as widgets
-import pandas as pd
 from bcolors import bcolors
 from pcp import PCP
 from encoder_lu2pcpm import Encoder_LU_to_PCPM

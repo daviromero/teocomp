@@ -3,7 +3,6 @@ from graphviz import Digraph
 from time import sleep
 from graphviz import Digraph
 from time import sleep
-from IPython.display import Image
 import ipywidgets as widgets
 from IPython.display import clear_output
 import pandas as pd

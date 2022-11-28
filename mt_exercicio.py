@@ -3,7 +3,6 @@ import pandas as pd
 from mt_ndmf import MTNDMF, S_BLK
 import ipywidgets as widgets
 from IPython.display import display
-import pandas as pd
 from bcolors import bcolors
 from mt_encoder import Encoder_MT
 from random import randrange

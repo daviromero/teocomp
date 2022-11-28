@@ -1,8 +1,6 @@
 import pandas as pd
 from IPython.display import HTML
 from IPython.display import display
-import pandas as pd
-from bcolors import bcolors
 
 class PCP:
   def __init__(self, pcp):

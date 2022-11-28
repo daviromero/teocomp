@@ -1,19 +1,14 @@
-import pandas as pd
-from IPython.display import HTML
-from IPython.display import display
-import pandas as pd
-from bcolors import bcolors
 from pcp import PCP
 
-input_pcpm_1 = [('A','AB'), ('B','CA'), ('CA','A'),('ABC','C')]
-input_pcpm_2 = [('A','AB'), ('CA','A'),('B','CA'), ('ABC','C')]
-input_pcpm_3 = [('A','AB'), ('ABC','C'), ('B','CA'), ('CA','A')]
-input_pcpm_4 = [('A','AB'), ('B','CA'), ('ABC','C'), ('CA','A')]
-input_pcpm_5 = [('A','AB'), ('BC', 'CA'), ('AB', 'C'),('CA','A')]
-input_pcpm_6 = [('A','AB'), ('AB', 'C'),('BC', 'CA'), ('CA','A')]
-input_pcpm_7 = [('A','AB'), ('CA','A'), ('BC', 'CA'), ('AB', 'C')]
-input_pcpm_8 = [('A','AB'), ('BC', 'CA'),('CA','A'), ('AB', 'C')]
-input_pcpm_n = [input_pcpm_1, input_pcpm_2, input_pcpm_3, input_pcpm_4, input_pcpm_5, input_pcpm_6, input_pcpm_7, input_pcpm_8 ]
+PCPM_1 = [('A','AB'), ('B','CA'), ('CA','A'),('ABC','C')]
+PCPM_2 = [('A','AB'), ('CA','A'),('B','CA'), ('ABC','C')]
+PCPM_3 = [('A','AB'), ('ABC','C'), ('B','CA'), ('CA','A')]
+PCPM_4 = [('A','AB'), ('B','CA'), ('ABC','C'), ('CA','A')]
+PCPM_5 = [('A','AB'), ('BC', 'CA'), ('AB', 'C'),('CA','A')]
+PCPM_6 = [('A','AB'), ('AB', 'C'),('BC', 'CA'), ('CA','A')]
+PCPM_7 = [('A','AB'), ('CA','A'), ('BC', 'CA'), ('AB', 'C')]
+PCPM_8 = [('A','AB'), ('BC', 'CA'),('CA','A'), ('AB', 'C')]
+PCPM_n = [PCPM_1, PCPM_2, PCPM_3, PCPM_4, PCPM_5, PCPM_6, PCPM_7, PCPM_8 ]
 
 class PCPM(PCP):
   def __init__(self, pcpm):
@@ -48,5 +43,3 @@ class PCPM(PCP):
       index_solution_pcp.append(c+1)
     index_solution_pcp.append(len(self))
     return index_solution_pcp
-
-
