@@ -265,8 +265,9 @@ class Exercicio_MT:
 
 
   @staticmethod    
-  def mt_universal(M):
-    input_strings = Exercicio_MT.gerar_tapes(M)
+  def mt_universal(M, input_strings=None):
+    if input_strings==None:
+      input_strings = Exercicio_MT.gerar_tapes(M)
     M.iniciar(input_string_tapes=input_strings)
     encoder = Encoder_MT(M,delimiter_color=False)
     input_MT_word = input_strings[0]

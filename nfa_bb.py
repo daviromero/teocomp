@@ -1,5 +1,4 @@
 from nfa import NFA
-from time import sleep
 from graphviz import Digraph
 from time import sleep
 import ipywidgets as widgets
