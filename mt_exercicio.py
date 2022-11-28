@@ -265,17 +265,15 @@ class Exercicio_MT:
 
 
   @staticmethod    
-  def mt_universal(M, input_strings=None):
-    if input_strings==None:
-      input_strings = Exercicio_MT.gerar_tapes(M)
-    M.iniciar(input_string_tapes=input_strings)
-    encoder = Encoder_MT(M,delimiter_color=False)
-    input_MT_word = input_strings[0]
+  def mt_universal(M, steps=1, input_word=None):
+    if input_word==None:
+      input_word = Exercicio_MT.gerar_tapes(M)
+    M.iniciar(input_word)
+    # encoder = Encoder_MT(M,delimiter_color=False)
+    # input_MT_word = input_strings[0]
 
     wOutputMT1 = widgets.Output()
     wOutputMTU1 = widgets.Output()
-    wOutputMT2 = widgets.Output()
-    wOutputMTU2 = widgets.Output()
 
     wInputs_1 = [widgets.Text(placeholder=f'Prefixo da Fita {i+1}') for i in range(3)]
     wInputs_2 = [widgets.Text(placeholder=f'Sufixo da Fita {i+1}') for i in range(3)]
@@ -292,24 +290,28 @@ class Exercicio_MT:
         wAll = widgets.HBox([widgets.VBox(wInputs_1),wStates,widgets.VBox(wInputs_2)])
         display(wText,wAll,output1)
 
-
-    wInputs_1_B = [widgets.Text(placeholder=f'Prefixo da Fita {i+1}') for i in range(3)]
-    wInputs_2_B = [widgets.Text(placeholder=f'Sufixo da Fita {i+1}') for i in range(3)]
-    wStates_B = widgets.Dropdown(description="Estado:",options=sorted(list(['Controle'])),value='Controle', disabled= True,style= {'description_width': '0px'})      
-    wText_B = widgets.HTML(value="<h3>Defina a Descrição Instantânea da Máquina de Turing Universal de M ao lado</h3>")
-    output2 = widgets.Output()
-
-
-    with wOutputMT2:
-      display(widgets.HTML(value="<h3>Considere a computação em um passo da MT M:</h3>"))
-      M.step()
-      M.display()
-
-    with wOutputMTU2:
-        wAll_B = widgets.HBox([widgets.VBox(wInputs_1_B),wStates,widgets.VBox(wInputs_2_B)])
-        display(wText_B, wAll_B)
-
-
     wOutput1 = widgets.HBox([wOutputMT1, wOutputMTU1])
-    wOutput2 = widgets.HBox([wOutputMT2, wOutputMTU2])
-    display(wOutput1, wOutput2)
+    display(wOutput1)
+
+    for j in range(steps):
+
+      wInputs_1_B = [widgets.Text(placeholder=f'Prefixo da Fita {i+1}') for i in range(3)]
+      wInputs_2_B = [widgets.Text(placeholder=f'Sufixo da Fita {i+1}') for i in range(3)]
+      wStates_B = widgets.Dropdown(description="Estado:",options=sorted(list(['Controle'])),value='Controle', disabled= True,style= {'description_width': '0px'})      
+      wText_B = widgets.HTML(value="<h3>Defina a Descrição Instantânea da Máquina de Turing Universal de M ao lado</h3>")
+
+      wOutputMT2 = widgets.Output()
+      wOutputMTU2 = widgets.Output()
+
+      with wOutputMT2:
+        display(widgets.HTML(value="<h3>Considere a computação em um passo da MT M:</h3>"))
+        M.step()
+        if not M.resultado() and not M.hasNext():
+          break
+        M.display()
+
+      with wOutputMTU2:
+          wAll_B = widgets.HBox([widgets.VBox(wInputs_1_B),wStates_B,widgets.VBox(wInputs_2_B)])
+          display(wText_B, wAll_B)
+      wOutput2 = widgets.HBox([wOutputMT2, wOutputMTU2])
+      display(wOutput2)
