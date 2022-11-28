@@ -767,4 +767,160 @@ class MTNDMF: # Máquina de Turing Não-Determinística Multi-fita
         output.clear_output()
 
       reset.on_click(clear)
-      
+
+    def simular_id_inicial(self, input_prefix_word='',input_sufix_word='', initialState = None, max_steps=200, blank_as=S_BLK_BOX,tamanho_fita = 10, pausa = 0.8, show_other_MTs=True):
+      layout = widgets.Layout(width='850px')
+      w_max_steps = widgets.IntSlider(
+          description="Max. Passos.",
+          value=max_steps,
+          min=10,
+          step=10,
+          max=1000,
+          description_tooltip='Defina o número máximo de passos executados pela máquina de turing.',
+          disabled=False,
+          continuous_update=False,
+          orientation='horizontal',
+          readout=True
+      )
+      speed = widgets.FloatSlider(
+          value=0.8,
+          min=0,
+          max=3.0,
+          step=0.1,
+          description='Pausa:',
+          description_tooltip='Defina a pausa (em segundos) de exibição entre as descrições instantâneas da simulação.',
+          disabled=False,
+          continuous_update=False,
+          orientation='horizontal',
+          readout=True,
+          readout_format='.1f',
+      )
+      step = widgets.Button(description="Passo-a-Passo")
+      run = widgets.Button(description="Simular")
+      reset = widgets.Button(description="Limpar")
+      wInputs_1 = [widgets.Text(placeholder=f'Prefixo da Fita {i+1}') for i in range(self.ntapes)]
+      wInputs_2 = [widgets.Text(placeholder=f'Sufixo da Fita {i+1}') for i in range(self.ntapes)]
+      wInputs_1[0].value=input_prefix_word
+      wInputs_2[0].value=input_sufix_word
+      if initialState==None:
+        initialState = self.startState
+      wStates = widgets.Dropdown(description="Estado:",options=sorted(list(self.states)),value=initialState,style= {'description_width': '0px'})      
+      wText = widgets.HTML(value="Defina a Descrição Instantânea Inicial da Máquina de Turing")
+      wAll = widgets.HBox([widgets.VBox(wInputs_1),wStates,widgets.VBox(wInputs_2)])
+
+      output = widgets.Output()
+      wButtons = widgets.HBox([reset,step,run,speed,w_max_steps])
+      display(wText,wAll,wButtons,output)
+      self.d_MT = None
+      self.d_MTs = None
+      self.d_Tapes = None
+      palavra = ''
+
+      def get_input_id():
+        state = wStates.value
+        lTapes = []
+        lPos = []
+        for i in range(self.ntapes):
+          pre_tape_i = wInputs_1[i].value
+          suf_tape_i = wInputs_2[i].value if wInputs_2[i].value else ' '
+          tape_i = (pre_tape_i+suf_tape_i)
+          lTapes.append(tape_i) 
+          pos_i = len(pre_tape_i)
+          lPos.append(pos_i)
+        return state, lPos, lTapes
+
+
+      def on_button_step_clicked(_):
+        run.disabled = True
+        speed.disabled = True
+        wStates.disabled = True
+        for i in range(self.ntapes):
+          wInputs_1[i].disabled = True
+          wInputs_2[i].disabled = True
+        step.disabled = True
+        w_max_steps.disabled = True
+        
+        start_state, head_tapes, input_string_tapes = get_input_id()
+        if type(input_string_tapes) is list:
+          palavra = input_string_tapes[0]
+        else:
+          palavra = input_string_tapes
+
+        if self.d_MT == None:
+          # Inicializa a MT
+          self.iniciar(start_state=start_state, head_tapes=head_tapes, input_string_tapes=input_string_tapes)
+          # Inicializa os displays
+          self.d_MT, self.d_MTs, self.d_Tapes = self.inicializar_vizualizacao(self.startId, blank_as=blank_as, tamanho_fita = tamanho_fita, show_other_MTs=show_other_MTs)
+          #Visualiza a Id Inicial
+          self.visualizar_id(self.startId, self.d_MT, self.d_MTs, self.d_Tapes, blank_as=blank_as, tamanho_fita = tamanho_fita, pausa = pausa, pausa_entre_ids = 0, show_other_MTs=show_other_MTs)
+        elif self.hasNext():
+          self.step()
+          if self.traces:
+            self.traces = [self.traces[0]]
+            id = self.traces[0][-1]
+            self.visualizar_id(id, self.d_MT, self.d_MTs, self.d_Tapes, blank_as=blank_as, tamanho_fita = tamanho_fita, pausa = pausa, pausa_entre_ids = 0, show_other_MTs=show_other_MTs)
+            if self.resultado(): 
+              with output:
+                print(f"{bcolors.OKBLUE}A palavra {palavra} foi aceita.\n")
+              step.disabled = True
+              return
+          else:
+            if self.resultado(): 
+              with output:
+                print(f"A palavra {palavra} foi aceita.\n")
+            else:
+              with output:
+                self.keep_traces = True
+                aceita = self.aceita(start_state=start_state, head_tapes=head_tapes, input_string_tapes=input_string_tapes,show_steps=False)
+                if aceita==True: print(f"{bcolors.FAIL}A palavra {palavra} não foi aceita por esta computação.\n{bcolors.OKGREEN}Todavia, há uma computação que reconhece essa palavra. Clique no botão Simular para visualizar uma computação que reconhece essa palavra.")
+                elif aceita == "Timeout": print(f"{bcolors.FAIL}A palavra {palavra} não foi aceita em {w_max_steps.value} passos.")
+                else: print(f"{bcolors.FAIL}A palavra {palavra} não foi aceita por nenhuma computação.\n")
+            step.disabled = True
+            return
+        else:
+          if not self.resultado():
+            with output:
+              print(f"{bcolors.FAIL}A palavra {palavra} não foi aceita por nenhuma computação.\n")
+            step.disabled = True
+            return
+        step.disabled = False
+
+      step.on_click(on_button_step_clicked)
+
+      def on_button_run_clicked(_):
+        reset.disabled = True
+        step.disabled = True
+        run.disabled = True
+        wStates.disabled = True
+        for i in range(self.ntapes):
+          wInputs_1[i].disabled = True
+          wInputs_2[i].disabled = True
+        speed.disabled = True
+        w_max_steps.disabled = True
+        start_state, head_tapes, input_string_tapes = get_input_id()
+        self.visualizar_computacao(start_state=start_state, head_tapes=head_tapes, input_string_tapes=input_string_tapes, pausa = speed.value,max_steps=w_max_steps.value, show_other_MTs=show_other_MTs)
+        reset.disabled = False
+
+      run.on_click(on_button_run_clicked)
+
+      def clear(_):
+        speed.value =0.8
+        speed.disabled = False
+        reset.disabled = False
+        step.disabled = False
+        wStates.disabled = False
+        for i in range(self.ntapes):
+          wInputs_1[i].disabled = False
+          wInputs_2[i].disabled = False
+        run.disabled = False
+        w_max_steps.disabled = False
+        w_max_steps.value = max_steps
+        clear_output()
+        display(wText,wAll,wButtons,output)
+        self.d_MT = None
+        self.d_MTs = None
+        self.d_Tapes = None
+        output.clear_output()
+
+      reset.on_click(clear)
+

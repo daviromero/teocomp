@@ -1,16 +1,13 @@
 import pandas as pd
 from IPython.display import HTML
 from IPython.display import display
-import ipywidgets as widgets
 import pandas as pd
-from bcolors import bcolors
 from pcpm import PCPM
-from mt_ndmf import MTNDMF
 
 
 class Encoder_LU_to_PCPM:
-  def __init__(self, MTNDMF, word, delimiter='#'):
-    self.MT = MTNDMF
+  def __init__(self, mtndmf, word, delimiter='#'):
+    self.MT = mtndmf
     self.word = word
     self.delimiter = delimiter
 

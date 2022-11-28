@@ -265,13 +265,8 @@ class Exercicio_MT:
 
 
 
-
-#@title Questáo 4 (2,5 Pontos): Simule uma Máquina de Turing na Máquina de Turing Universal
-#@markdown Execute essa célula para gerar o seu exercício. Então, codifique a Máquina de Turing abaixo em binário. 
-
   @staticmethod    
-  def mt_universal(num_states=3, num_extra_transition=0):
-    M = Exercicio_MT.gerar_2(num_states=num_states, num_extra_transition=num_extra_transition)
+  def mt_universal(M):
     input_strings = Exercicio_MT.gerar_tapes(M)
     M.iniciar(input_string_tapes=input_strings)
     encoder = Encoder_MT(M,delimiter_color=False)
