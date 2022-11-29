@@ -66,10 +66,10 @@ def rec_aux(y,*xs):
 ## Definições de funções que serão utilizadas na minimização limitada
 soma_aux = lambda x,y: rec(x,y)(lambda x: u(1,x), lambda x,y,z: s(u(3,x,y,z)))
 mult_aux = lambda x,y: rec(x,y)(lambda x:z(x), lambda x,y,z: soma_aux(u(3,x,y,z),u(1,x,y,z)))
-a_aux = lambda y: rec(y)(z(_), lambda y,z: u(1,y,z))
+a_aux = lambda y: rec(y)(z(y), lambda y,z: u(1,y,z))
 sub_aux = lambda x,y : rec(x,y)(lambda x:u(1,x),lambda x,y,z:a_aux(u(3,x,y,z)))
 sub_abs_aux = lambda x,y: soma_aux(sub_aux(x,y),sub_aux(y,x))
-isZero_aux = lambda x: sub_aux(s(z(_)),x)
+isZero_aux = lambda x: sub_aux(s(z(x)),x)
 d_aux = lambda x,y: isZero_aux(sub_abs_aux(x,y))
 lnot_aux = lambda x: isZero_aux(x)
 
@@ -149,7 +149,7 @@ def exists_leq(*args):
   return lambda f: isZero_aux(isZero_aux(somatorio(*(tuple(args)+tuple([args[-1]])))(f)))
 
 def forall_leq(*args):
-  return lambda f: d_aux(produtorio(*(tuple(args)+tuple([args[-1]])))(f),s(z(_)))
+  return lambda f: d_aux(produtorio(*(tuple(args)+tuple([args[-1]])))(f),s(z(0)))
 
 # Define a minimização limitada
 def Min(*args):
@@ -162,12 +162,12 @@ def Min(*args):
 
 prod_aux_1 = lambda f: (lambda y,t: produtorio_1(y,t,lambda y,t: lnot_aux(f(y,t))))
 def Min_0(y):
-  return lambda f: somatorio_1(y,y, prod_aux_1(f))  if exists_leq(y)(f) else z(_)
+  return lambda f: somatorio_1(y,y, prod_aux_1(f))  if exists_leq(y)(f) else z(y)
 
 prod_aux_2 = lambda f: (lambda x,y,t: produtorio_2(x,y,t,lambda x,y,t: lnot_aux(f(x,y,t))))
 def Min_1(x,y):
-  return lambda f: somatorio_2(x,y,y, prod_aux_2(f))  if exists_leq(x,y)(f) else z(_)
+  return lambda f: somatorio_2(x,y,y, prod_aux_2(f))  if exists_leq(x,y)(f) else z(x)
 
 prod_aux_3 = lambda f: (lambda x1,x2,y,t: produtorio_3(x1,x2,y,t,lambda x1,x2,y,t: lnot_aux(f(x1,x2,y,t))))
 def Min_2(x1,x2,y):
-  return lambda f: somatorio_3(x1,x2,y,y, prod_aux_3(f)) if exists_leq(x1,x2,y)(f) else z(_)
+  return lambda f: somatorio_3(x1,x2,y,y, prod_aux_3(f)) if exists_leq(x1,x2,y)(f) else z(y)
