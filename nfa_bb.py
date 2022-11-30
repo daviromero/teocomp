@@ -232,14 +232,12 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):             
-        return self.trace_display(highlight=highlight, nfa_name = nfa_name, size=size)
+    def trace_visualizar(self,highlight=[], nfa_name = ''):             
+        return self.trace_display(highlight=highlight, nfa_name = nfa_name)
 
-    def trace_display(self,highlight=[], nfa_name = '', size='8,5'):             
+    def trace_display(self,highlight=[], nfa_name = ''):             
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
-        f.attr(rankdir='LR')
-        if size!=None:
-          f.attr(size=size)
+        f.attr(rankdir='LR', size='8,5')
  
         f.attr('node', shape='point')
         f.node('')
@@ -265,7 +263,7 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       df = pd.DataFrame.from_dict(cases_test,orient='index',
                        columns=['Esperado'])
       lResult = []
-      for palavra in cases_test.keys():
+      for palavra in casos_testes.keys():
         lResult.append(self.aceita(palavra))
       df['Resultado'] =lResult
       df.reset_index(inplace=True)
@@ -275,14 +273,12 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       display('Acertou {:.2f}% ({} de {})'.format(acertos/casos*100, acertos, casos))
       display(df)
 
-    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'):  
-      return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label, size=size)
+    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = ''):             
+      return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label)
 
-    def display(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'): 
+    def display(self,highlight=[],highlightNonDeterministic=False, label = ''):             
         f = Digraph('finite automata '+label, filename='nfa.gv')
-        f.attr(rankdir='LR')
-        if size!=None:
-          f.attr(size=size)
+        f.attr(rankdir='LR', size='8,5')
  
         f.attr('node', shape='point')
         f.node('')
@@ -334,29 +330,29 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
         return s      
 
 
-    def begin_display(self, id=None, pausa = 0.8, show_other_NFAs= True, size='8,5'):
+    def begin_display(self, id=None, pausa = 0.8, show_other_NFAs= True):
         if id==None: id = self.set_trace[0]
         NS, pos = id
         # Inicializa os displays
         d_word = display(self.display_word(id),display_id=True)
-        d_NFA = display(self.visualizar(highlight=[s for nfa, s in NS if nfa==self], size=size),display_id=True)
+        d_NFA = display(self.visualizar(highlight=[s for nfa, s in NS if nfa==self]),display_id=True)
         d_NFAs = None
         if(show_other_NFAs):
           d_NFAs = {}
           nfas = self.get_NFAs()
           for nfa in nfas.items():
-            d_NFAs[nfa[0]] = display(nfa[1].visualizar(highlight=[s for nfa_aux, s in NS if nfa==nfa_aux], size=size),display_id=True)
+            d_NFAs[nfa[0]] = display(nfa[1].visualizar(highlight=[s for nfa_aux, s in NS if nfa==nfa_aux]),display_id=True)
         sleep(pausa)
         return d_word, d_NFA, d_NFAs
 
-    def display_id(self, id, d_word, d_NFA, d_NFAs, pausa = 0.8, pausa_entre_ids = 0, show_other_NFAs= True, size='8,5'):
+    def display_id(self, id, d_word, d_NFA, d_NFAs, pausa = 0.8, pausa_entre_ids = 0, show_other_NFAs= True):
       NS, pos = id
 
       if(pausa_entre_ids>0):
-        d_NFA.update(self.visualizar(highlight=[],size=size))
+        d_NFA.update(self.visualizar(highlight=[]))
         if(show_other_NFAs):
           for nfa in self.NFAs.items():
-            d_NFAs[nfa[0]].update(nfa[1].visualizar(highlight=[],size=size))
+            d_NFAs[nfa[0]].update(nfa[1].visualizar(highlight=[]))
         sleep(pausa_entre_ids)
 
       d_word.update(self.display_word(id))
@@ -364,14 +360,14 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       if(show_other_NFAs):
         for nfa in self.NFAs.items():
           nfa_highlight = [s for nfa_aux, s in NS if nfa[1]==nfa_aux]
-          d_NFAs[nfa[0]].update(nfa[1].visualizar(highlight=nfa_highlight+highlight_states,size=size))
+          d_NFAs[nfa[0]].update(nfa[1].visualizar(highlight=nfa_highlight+highlight_states))
           if(len(nfa_highlight)>0):
             highlight_states.append(nfa[0])
-      d_NFA.update(self.visualizar(highlight=[s for nfa, s in NS if nfa==self]+highlight_states,size=size))
+      d_NFA.update(self.visualizar(highlight=[s for nfa, s in NS if nfa==self]+highlight_states))
 
       sleep(pausa)
 
-    def simular(self, input_string='', pausa = 0.8, show_other_NFAs=True, size='8,5'):
+    def simular(self, input_string='', pausa = 0.8, show_other_NFAs=True):
       layout = widgets.Layout(width='750px')
       speed = widgets.FloatSlider(
           value=0.8,
@@ -424,14 +420,14 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
           self.keep_traces = True          
           self.result = self.accept(input.value)
           # Inicializa os displays
-          self.d_word, self.d_NFA, self.d_NFAs = self.begin_display(self.set_trace[0], show_other_NFAs=show_other_NFAs, size=size)
+          self.d_word, self.d_NFA, self.d_NFAs = self.begin_display(self.set_trace[0], show_other_NFAs=show_other_NFAs)
           self.step_simulation = 0
           if only_trace.value:
             if self.result:
               self.set_trace = self.deduction_to_trace(self.get_deduction())
             else:
               self.set_trace = self.deduction_to_trace(self.get_deduction(accept=False))
-        self.display_id(self.set_trace[self.step_simulation], self.d_word, self.d_NFA, self.d_NFAs, pausa = pausa, pausa_entre_ids = 0.1, show_other_NFAs=show_other_NFAs, size=size)  
+        self.display_id(self.set_trace[self.step_simulation], self.d_word, self.d_NFA, self.d_NFAs, pausa = pausa, pausa_entre_ids = 0.1, show_other_NFAs=show_other_NFAs)        
         if(self.step_simulation==len(self.set_trace)-1):
           with output:
             if self.result: print(f"{bcolors.OKBLUE}A palavra {input.value} foi aceita.\n")
@@ -462,10 +458,10 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
             else:
               self.set_trace = self.deduction_to_trace(self.get_deduction(accept=False))
           # Inicializa os displays
-          self.d_word, self.d_NFA, self.d_NFAs = self.begin_display(self.set_trace[0], show_other_NFAs=show_other_NFAs, size=size)
+          self.d_word, self.d_NFA, self.d_NFAs = self.begin_display(self.set_trace[0], show_other_NFAs=show_other_NFAs)
           self.step_simulation = 0
         while self.step_simulation<len(self.set_trace):
-          self.display_id(self.set_trace[self.step_simulation], self.d_word, self.d_NFA, self.d_NFAs, pausa = pausa, pausa_entre_ids = 0.1, show_other_NFAs=show_other_NFAs, size=size)
+          self.display_id(self.set_trace[self.step_simulation], self.d_word, self.d_NFA, self.d_NFAs, pausa = pausa, pausa_entre_ids = 0.1, show_other_NFAs=show_other_NFAs)
           self.step_simulation += 1
         with output:
           if self.result: print(f"{bcolors.OKBLUE}A palavra {input.value} foi aceita.\n")
@@ -508,8 +504,8 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
     def to_NFA(self):
       Q = self.states.difference(self.NFAs.keys())
       Sigma = self.alphabet
-      for nfa in NFAs.keys():
-        Sigma = Sigma.union(NFAs[nfa].alphabet)
+      for nfa in self.NFAs.keys():
+        Sigma = Sigma.union(self.NFAs[nfa].alphabet)
       q0 = self.startState
       F = self.acceptStates
       delta = {}
