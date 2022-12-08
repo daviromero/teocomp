@@ -1,11 +1,11 @@
-from nfa import NFA
+from teocomp.nfa import NFA
 from graphviz import Digraph
 from time import sleep
 import ipywidgets as widgets
 from IPython.display import clear_output
 import pandas as pd
 from IPython.display import display
-from bcolors import bcolors
+from teocomp.bcolors import bcolors
 
 class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with Building-Blocks
  

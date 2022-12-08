@@ -1,4 +1,4 @@
-from pcpm import PCPM
+from teocomp.pcpm import PCPM
 
 class Encoder_LU_to_PCPM:
   def __init__(self, mtndmf, word, delimiter='#'):

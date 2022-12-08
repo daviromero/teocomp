@@ -1,9 +1,10 @@
+from random import randrange
 import pandas as pd
-from mt_ndmf import MTNDMF, S_BLK
+from teocomp.mt_ndmf import MTNDMF, S_BLK
 import ipywidgets as widgets
 from IPython.display import display
-from bcolors import bcolors
-from mt_encoder import Encoder_MT
+from teocomp.bcolors import bcolors
+from teocomp.mt_encoder import Encoder_MT
 from random import randrange
 
 class Exercicio_MT:

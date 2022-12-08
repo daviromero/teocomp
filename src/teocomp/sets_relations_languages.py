@@ -3,7 +3,7 @@ import ipywidgets as widgets
 from IPython.display import display, Markdown
 from random import randrange
 import pandas as pd
-from bcolors import bcolors
+from teocomp.bcolors import bcolors
 
 # Define um novo conjunto a partir de um conjunto A obedecendo a propriedade P.
 def conjunto(A,P):

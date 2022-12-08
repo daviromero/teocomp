@@ -1,14 +1,13 @@
-from dfa import DFA
+from teocomp.dfa import DFA
 from graphviz import Digraph
 from time import sleep
 import ipywidgets as widgets
 from IPython.display import clear_output
 import pandas as pd
-from IPython.display import display, Markdown
+from IPython.display import display
+from teocomp.bcolors import bcolors
 
-from bcolors import bcolors
-
-class NFA: # Non-Deterministic Finete Automata
+class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
  
     @staticmethod
     def valida(Q={}, Sigma={}, q0=0, delta={}, F=set()):
@@ -28,7 +27,7 @@ class NFA: # Non-Deterministic Finete Automata
         if not q in Q:
           b = False
           ERROR.append(f"Na transição delta({t}), {q} não está em Q")
-        if not t[1] in Sigma:
+        if not t[1] in Sigma.union({''}):
           b = False
           ERROR.append(f"Na transição delta({t}), {t[1]} não está em Sigma")
         if not isinstance(delta[t],set) or not delta[t].issubset(Q):
@@ -41,7 +40,7 @@ class NFA: # Non-Deterministic Finete Automata
         # if input_jff != None:          
         #   Q,Sigma,Gamma,delta,q0,F = MTNDMF.jffToMT(input_jff)
 
-        b, ERROR = NFA.valida(Q,Sigma,q0,delta,F)
+        b, ERROR = NFA_E.valida(Q,Sigma,q0,delta,F)
         if not b: 
           print(f"{bcolors.FAIL}Os seguintes erros foram encontrados:\n")
           print(',\n'.join(ERROR))
@@ -55,70 +54,45 @@ class NFA: # Non-Deterministic Finete Automata
         self.word = ''
         self.trace = []
         self.history_traces = []
+        self.epsilon_closure = None
+        self.set_epsilon_closure()
+
+    def set_epsilon_closure(self):
+      self.epsilon_closure = {}
+      for s in self.states:
+        result = {s}
+        b = True
+        while b:
+          b = False
+          new_set = set()
+          for q in result:
+            if (q,'') in self.transition:
+              for s_q in self.transition[q,'']:
+                if not s_q in result:
+                  new_set.add(s_q)
+                  b = True
+          result = result.union(new_set)
+        self.epsilon_closure[s] = result
+      
 
     def id_to_str(self, id):
       return (f'{id[0]}, {self.word[id[1]:]}')
 
-
-    def delta(self, s, input, show_steps=False):
+    def delta(self, s, input):
       if input=='' or input==[]:
-        if show_steps:
-          display(Markdown(r'$\bar{\delta}_N('+s+f',\epsilon) = '+'\{'+s+'\}$'))
-        if self.keep_traces:
-          self.trace.append(({s},0))
-          self.history_traces.append([({s},0)])
-        return {s}
+        r_s = self.epsilon_closure[s]
+        return r_s
       else:
-        states_delta_bar = self.delta(s,input[:-1],show_steps=show_steps)
+        states_delta_bar = self.delta(s,input[:-1])
         result = set()
-        s_deltas = []
-        s_deltas_aux = []
         for s_delta_bar in states_delta_bar:
-          if show_steps:
-            s_deltas.append(r'\delta_N('+s_delta_bar+f', {input[-1]})')
           if (s_delta_bar,input[-1]) in self.transition:
             set_r = self.transition[s_delta_bar,input[-1]]
             result = result.union(set_r)
-            if show_steps:
-              s_deltas_aux.append('\{'+', '.join(sorted(list(set_r)))+'\}')
-          else:
-            if show_steps:
-              s_deltas_aux.append(r'\emptyset')
-
-        if show_steps:
-          s_deltas = r'\cup'.join(s_deltas)
-          s_deltas_aux = r'\cup'.join(s_deltas_aux)
-          s_result = '\{'+', '.join(sorted(list(result)))+'\}'
-          if s_result==s_deltas_aux:
-            s_result = ''
-          else:
-            s_result = ' = '+s_result  
-          if len(input[1:])>0:
-            s_aux = input[1:]  
-          else:
-            s_aux = '\epsilon'
-          display(Markdown(r'$\bar{\delta}_N('+s+f',{input}) = '+r'\bigcup_{p\in \bar{\delta}_N('+f'{s},{s_aux})'+'}\delta_N(p, '+f'{input[-1]}) = {s_deltas} = {s_deltas_aux}{s_result}$'))
-
-        # if self.keep_traces:
-        #   if len(result)>0:
-        #     self.trace.append((result,input[-1]))
-        # return result
-
-        if self.keep_traces:
-          if len(result)>0:
-            self.trace.append((result,self.trace[-1][1]+1))
-            updated_history_traces = []
-            for trace in self.history_traces:
-              id = trace[-1]
-              if s==id[0]:
-                if len(result)==0:
-                  updated_history_traces.append(trace)
-                for r in result:
-                  updated_history_traces.append(trace+[(r,id[1]+1)])
-              else:
-                updated_history_traces.append(trace)
-            self.history_traces = updated_history_traces
-        return result
+        new_result = set()
+        for r in result:
+          new_result = new_result.union(self.epsilon_closure[r])
+        return new_result
 
     def deduction(self, id):
       if id==None:
@@ -131,28 +105,31 @@ class NFA: # Non-Deterministic Finete Automata
       a = self.word[pos]
 
       if (s,a) in self.transition:
+        transition_closure = set()
         for r in self.transition[s,a]:
+          transition_closure = transition_closure.union(self.epsilon_closure[r])
+        for r in  transition_closure:
           result.append((r,pos+1))
       return result
 
     def get_initial_ids(self):
-      return [(self.startState,0)]
+      history_traces = []
+      for r in self.epsilon_closure[self.startState]:
+        history_traces.append([(r,0)])
+      return history_traces
 
     def trace_accept(self, trace):
       return trace[-1][0] in self.acceptStates and trace[-1][1]==len(self.word)
 
 
-    def aceita(self,word):
-      return self.accept(word)
-
     def accept(self,word):
       self.word= word
       self.trace = []
       self.history_traces = []
-      traces = [self.get_initial_ids()]
+      traces = self.get_initial_ids()
       if self.keep_traces:
         self.history_traces = traces
-        self.trace = [({self.startState}, 0)]
+        self.trace = [(self.epsilon_closure[self.startState], 0)]
       for pos in range(len(word)):
         updated_traces = []
         has_new_deduction = False
@@ -181,6 +158,8 @@ class NFA: # Non-Deterministic Finete Automata
           return True
       return False
 
+    def aceita(self,word):
+      return self.accept(word)
 
     def states_to_str(self, states):
        return '{' + ', '.join(sorted(list(states)))+'}'
@@ -216,7 +195,7 @@ class NFA: # Non-Deterministic Finete Automata
         F = set()
 
 
-        initial_states = {self.startState}
+        initial_states = self.epsilon_closure[self.startState]
         if len(initial_states) > 0:
             q0= self.states_to_str(initial_states)
             Q.add(q0)
@@ -238,6 +217,10 @@ class NFA: # Non-Deterministic Finete Automata
                             next_set.add(next_state)
                 if len(next_set) == 0:
                     continue
+                new_next_set = set()
+                for s in next_set:
+                    new_next_set.update(self.epsilon_closure[s])
+                next_set = new_next_set
                 s_next_set = self.states_to_str(next_set)
                 s_current_set = self.states_to_str(current_set)
                 if next_set not in sets_states:
@@ -289,10 +272,10 @@ class NFA: # Non-Deterministic Finete Automata
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = '',size='8,5'):             
-        return self.trace_display(highlight=highlight, nfa_name = nfa_name,size=size)
+    def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):  
+        return self.trace_display(highlight=highlight, nfa_name = nfa_name)
 
-    def trace_display(self,highlight=[], nfa_name = '',size='8,5'):             
+    def trace_display(self,highlight=[], nfa_name = '', size='8,5'):
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -348,13 +331,15 @@ class NFA: # Non-Deterministic Finete Automata
         else: 
           states.append(s)
       d_tabela['Estado'] = states
-      for a in sorted(list(self.alphabet)):
+      for a in sorted(list(self.alphabet)+['']):
         l = []
         for s in sorted_states:
           if (s,a) in self.transition.keys():
             l.append('{'+', '.join([s for s in sorted(list(self.transition[s,a]))])+'}')
           else:
             l.append('∅')
+        if a=='':
+          d_tabela["𝜖"] = l
         else:
           d_tabela[a] = l
       df = pd.DataFrame(d_tabela)
@@ -364,7 +349,7 @@ class NFA: # Non-Deterministic Finete Automata
     def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'):  
       return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label, size=size)
 
-    def display(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'):
+    def display(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'): 
         f = Digraph('finite automata '+label, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -409,7 +394,8 @@ class NFA: # Non-Deterministic Finete Automata
 
 
     def display_word(self,id):
-        s = Digraph('word'+self.word, filename='word.gv', node_attr={'shape': 'record','width':'0.1'})
+        s = Digraph('word'+self.word, filename='word.gv',
+                    node_attr={'shape': 'record','width':'0.1'})
         q, pos = id
 
         s.node('',shape='point')
@@ -424,7 +410,7 @@ class NFA: # Non-Deterministic Finete Automata
         if id==None: id = self.trace[0]
         # Inicializa os displays
         d_word = display(self.display_word(id),display_id=True)
-        d_NFA = display(self.visualizar(highlight=list(id[0]), size=size),display_id=True)
+        d_NFA = display(self.visualizar(highlight=list(id[0]),size=size),display_id=True)
         return d_word, d_NFA
 
     def display_id(self, id, d_word, d_NFA, pausa = 0.8, pausa_entre_ids = 0, size='8,5'):
@@ -436,11 +422,9 @@ class NFA: # Non-Deterministic Finete Automata
       d_NFA.update(self.visualizar(highlight=list(id[0]),size=size))
       sleep(pausa)
 
-
-    def simular(self, word='', pausa = 0.8,size='8,5'):
-      self.simulate(word=word, pausa = 0.8,size=size)
-
-    def simulate(self, word='', pausa = 0.8,size='8,5'):
+    def simular(self, word='', pausa = 0.8, size='8,5'):
+      self.simulate(word=word, pausa = 0.8, size=size)
+    def simulate(self, word='', pausa = 0.8, size='8,5'):
       layout = widgets.Layout(width='750px')
       speed = widgets.FloatSlider(
           value=0.8,
@@ -497,11 +481,11 @@ class NFA: # Non-Deterministic Finete Automata
             else:
               self.trace = self.deduction_to_trace(self.get_deduction(accept=False))
           # Inicializa os displays
-          self.d_word, self.d_NFA = self.begin_display(self.trace[0],size=size)
+          self.d_word, self.d_NFA = self.begin_display(self.trace[0], size=size)
           self.step_simulation = 0
         else:
           self.step_simulation += 1
-          self.display_id(self.trace[self.step_simulation], self.d_word, self.d_NFA, pausa = pausa, pausa_entre_ids = 0.1,size=size)
+          self.display_id(self.trace[self.step_simulation], self.d_word, self.d_NFA, pausa = pausa, pausa_entre_ids = 0.1, size=size)
         if(self.step_simulation==len(self.trace)-1):
           with output:
             if self.result: print(f"{bcolors.OKBLUE}A palavra {input.value} foi aceita.\n")
@@ -530,10 +514,10 @@ class NFA: # Non-Deterministic Finete Automata
             else:
               self.trace = self.deduction_to_trace(self.get_deduction(accept=False))
           # Inicializa os displays
-          self.d_word, self.d_NFA = self.begin_display(self.trace[0],size=size)
+          self.d_word, self.d_NFA = self.begin_display(self.trace[0], size=size)
           self.step_simulation = 0
         while self.step_simulation<len(self.trace):
-          self.display_id(self.trace[self.step_simulation], self.d_word, self.d_NFA, pausa = pausa, pausa_entre_ids = 0.1,size=size)
+          self.display_id(self.trace[self.step_simulation], self.d_word, self.d_NFA, pausa = pausa, pausa_entre_ids = 0.1, size=size)
           self.step_simulation += 1
         with output:
           if self.result: print(f"{bcolors.OKBLUE}A palavra {input.value} foi aceita.\n")

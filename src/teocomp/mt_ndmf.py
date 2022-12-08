@@ -5,7 +5,7 @@ import ipywidgets as widgets
 from IPython.display import clear_output
 from IPython.display import display
 import pandas as pd
-from bcolors import bcolors
+from teocomp.bcolors import bcolors
 
 S_EPSILON = '\u03B5' # ε
 S_BLK = ' '
@@ -767,6 +767,7 @@ class MTNDMF: # Máquina de Turing Não-Determinística Multi-fita
         output.clear_output()
 
       reset.on_click(clear)
+      
 
     def simular_id_inicial(self, input_prefix_word='',input_sufix_word='', initialState = None, max_steps=200, blank_as=S_BLK_BOX,tamanho_fita = 10, pausa = 0.8, show_other_MTs=True):
       layout = widgets.Layout(width='850px')

@@ -1,8 +1,8 @@
 from IPython.display import display
 import ipywidgets as widgets
-from bcolors import bcolors
-from pcp import PCP
-from encoder_lu2pcpm import Encoder_LU_to_PCPM
+from teocomp.bcolors import bcolors
+from teocomp.pcp import PCP
+from teocomp.encoder_lu2pcpm import Encoder_LU_to_PCPM
 
 
 class Exercicio_PCP:

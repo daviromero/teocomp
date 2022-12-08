@@ -5,7 +5,7 @@ import ipywidgets as widgets
 from IPython.display import clear_output
 import pandas as pd
 from IPython.display import display, Markdown
-from bcolors import bcolors
+from teocomp.bcolors import bcolors
 
 
 class DFA: # Deterministic Finete Automata

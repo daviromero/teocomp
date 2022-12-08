@@ -1,4 +1,4 @@
-from pcp import PCP
+from teocomp.pcp import PCP
 
 PCPM_1 = [('A','AB'), ('B','CA'), ('CA','A'),('ABC','C')]
 PCPM_2 = [('A','AB'), ('CA','A'),('B','CA'), ('ABC','C')]

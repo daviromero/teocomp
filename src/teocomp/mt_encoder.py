@@ -1,5 +1,5 @@
-from mt_ndmf import MTNDMF, S_BLK
-from bcolors import bcolors
+from teocomp.mt_ndmf import MTNDMF, S_BLK
+from teocomp.bcolors import bcolors
 
 class Encoder_MT():    
   def __init__(self, MTNDMF,delimiter_color=True):

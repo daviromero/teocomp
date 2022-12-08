@@ -1,4 +1,4 @@
-from mt_ndmf import MTNDMF, S_BLK
+from teocomp.mt_ndmf import MTNDMF, S_BLK
 import xmltodict
 
 
