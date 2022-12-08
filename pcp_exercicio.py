@@ -82,15 +82,15 @@ class Exercicio_PCP:
           new_pcp.display()
         else:
           print(f"\n{bcolors.FAIL}Infelizmente, você errou a conversão! Tente novamente!")
-        if (pcpm.is_solution(solution)):
+        if (pcpm.is_solution(solution) and len(solution)>0):
           print(f"\n{bcolors.OKBLUE}Parabéns, você encontrou uma solução para a PCPM!")
           pcpm.display_solution(solution)
-          if (new_pcp.is_solution(new_solution_pcp)):
+          if (new_pcp.is_solution(new_solution_pcp) and len(new_solution_pcp)>0):
             print(f"\n{bcolors.OKBLUE}Parabéns, você encontrou uma solução para o PCP!")
-            new_pcp.display_solution(solution)
+            new_pcp.display_solution(new_solution_pcp)
           else:
             print(f"\n{bcolors.FAIL}Infelizmente, você errou a solução da PCP! Tente novamente!")
-            new_pcp.display_solution(solution)
+            new_pcp.display_solution(new_solution_pcp)
         else:
           print(f"\n{bcolors.FAIL}Infelizmente, você errou a solução da PCPM! Tente novamente!")
           pcpm.display_solution(solution)
