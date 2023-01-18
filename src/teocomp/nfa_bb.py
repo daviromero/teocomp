@@ -265,7 +265,7 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       df = pd.DataFrame.from_dict(cases_test,orient='index',
                        columns=['Esperado'])
       lResult = []
-      for palavra in casos_testes.keys():
+      for palavra in cases_test.keys():
         lResult.append(self.aceita(palavra))
       df['Resultado'] =lResult
       df.reset_index(inplace=True)
@@ -275,12 +275,14 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       display('Acertou {:.2f}% ({} de {})'.format(acertos/casos*100, acertos, casos))
       display(df)
 
-    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = ''):             
-      return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label)
+    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '',size='8,5'):             
+      return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label,size=size)
 
-    def display(self,highlight=[],highlightNonDeterministic=False, label = ''):             
+    def display(self,highlight=[],highlightNonDeterministic=False, label = '',size='8,5'): 
         f = Digraph('finite automata '+label, filename='nfa.gv')
-        f.attr(rankdir='LR', size='8,5')
+        f.attr(rankdir='LR')
+        if size!=None:
+          f.attr(size=size)
  
         f.attr('node', shape='point')
         f.node('')
