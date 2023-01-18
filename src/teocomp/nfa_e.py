@@ -273,7 +273,7 @@ class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
       print('\n\n'.join(self.traces_to_deduction()))
 
     def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):  
-        return self.trace_display(highlight=highlight, nfa_name = nfa_name)
+        return self.trace_display(highlight=highlight, nfa_name = nfa_name,size=size)
 
     def trace_display(self,highlight=[], nfa_name = '', size='8,5'):
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')

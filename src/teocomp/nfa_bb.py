@@ -232,12 +232,14 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = ''):             
-        return self.trace_display(highlight=highlight, nfa_name = nfa_name)
+    def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):             
+        return self.trace_display(highlight=highlight, nfa_name = nfa_name, size=size)
 
-    def trace_display(self,highlight=[], nfa_name = ''):             
+    def trace_display(self,highlight=[], nfa_name = '', size='8,5'):             
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
-        f.attr(rankdir='LR', size='8,5')
+        f.attr(rankdir='LR')
+        if size!=None:
+          f.attr(size=size)
  
         f.attr('node', shape='point')
         f.node('')

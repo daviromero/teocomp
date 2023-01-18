@@ -276,8 +276,8 @@ class DFA: # Deterministic Finete Automata
     def traces_to_deduction_print(self):
       print('\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], dfa_name = ''):             
-        return self.trace_display(highlight=highlight, dfa_name = dfa_name)
+    def trace_visualizar(self,highlight=[], dfa_name = '', size='8,5'):             
+        return self.trace_display(highlight=highlight, dfa_name = dfa_name, size=size)
 
     def trace_display(self,highlight=[], dfa_name = '', size='8,5'): 
         f = Digraph('finite automata '+dfa_name, filename='dfa.gv')
