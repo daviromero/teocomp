@@ -163,7 +163,7 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
 
     def len_states(self):
       total = len(self.states)#-len(self.NFAs)
-      for nfa in self.NFAs:
+      for nfa in self.NFAs.values():
         total += nfa.len_states()
       return total      
 
@@ -171,7 +171,7 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       total = 0
       for (s,a) in self.transition:
         total += len(self.transition[s,a])
-      for nfa in self.NFAs:
+      for nfa in self.NFAs.values():
         total += nfa.len_transition()
       return total
     
