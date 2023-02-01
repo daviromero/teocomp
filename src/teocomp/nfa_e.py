@@ -280,10 +280,10 @@ class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):  
+    def trace_visualizar(self,highlight=[], nfa_name = '', size=None):  
         return self.trace_display(highlight=highlight, nfa_name = nfa_name,size=size)
 
-    def trace_display(self,highlight=[], nfa_name = '', size='8,5'):
+    def trace_display(self,highlight=[], nfa_name = '', size=None):
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -354,10 +354,10 @@ class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
       display(df.style.hide_index()) 
 
 
-    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'):  
+    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '', size=None):  
       return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label, size=size)
 
-    def display(self,highlight=[],highlightNonDeterministic=False, label = '', size='8,5'): 
+    def display(self,highlight=[],highlightNonDeterministic=False, label = '', size=None): 
         f = Digraph('finite automata '+label, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -414,14 +414,14 @@ class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
         return s      
 
 
-    def begin_display(self, id=None, pausa = 0.8, size='8,5'):
+    def begin_display(self, id=None, pausa = 0.8, size=None):
         if id==None: id = self.trace[0]
         # Inicializa os displays
         d_word = display(self.display_word(id),display_id=True)
         d_NFA = display(self.visualizar(highlight=list(id[0]),size=size),display_id=True)
         return d_word, d_NFA
 
-    def display_id(self, id, d_word, d_NFA, pausa = 0.8, pausa_entre_ids = 0, size='8,5'):
+    def display_id(self, id, d_word, d_NFA, pausa = 0.8, pausa_entre_ids = 0, size=None):
       if(pausa_entre_ids>0):
         d_NFA.update(self.visualizar(highlight=[],size=size))
         sleep(pausa_entre_ids)
@@ -430,9 +430,9 @@ class NFA_E: # Non-Deterministic Finete Automata with Epsilon Transitions
       d_NFA.update(self.visualizar(highlight=list(id[0]),size=size))
       sleep(pausa)
 
-    def simular(self, word='', pausa = 0.8, size='8,5'):
+    def simular(self, word='', pausa = 0.8, size=None):
       self.simulate(word=word, pausa = 0.8, size=size)
-    def simulate(self, word='', pausa = 0.8, size='8,5'):
+    def simulate(self, word='', pausa = 0.8, size=None):
       layout = widgets.Layout(width='750px')
       speed = widgets.FloatSlider(
           value=0.8,

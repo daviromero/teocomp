@@ -282,10 +282,10 @@ class DFA: # Deterministic Finete Automata
     def traces_to_deduction_print(self):
       print('\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], dfa_name = '', size='8,5'):             
+    def trace_visualizar(self,highlight=[], dfa_name = '', size=None):             
         return self.trace_display(highlight=highlight, dfa_name = dfa_name, size=size)
 
-    def trace_display(self,highlight=[], dfa_name = '', size='8,5'): 
+    def trace_display(self,highlight=[], dfa_name = '', size=None): 
         f = Digraph('finite automata '+dfa_name, filename='dfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -305,10 +305,10 @@ class DFA: # Deterministic Finete Automata
             f.edge(str(index-1),str(index),label=self.word[pos-1])
         return f
 
-    def visualizar(self,highlight=[], label = '',size='8,5'):             
+    def visualizar(self,highlight=[], label = '',size=None):             
       return self.display(highlight=highlight,label = label, size=size)
       
-    def display(self,highlight=[],label = '',size='8,5'):             
+    def display(self,highlight=[],label = '',size=None):             
         f = Digraph('finite automata '+label, filename='dfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -382,14 +382,14 @@ class DFA: # Deterministic Finete Automata
         return s      
 
 
-    def begin_display(self, id=None, pausa = 0.8, size='8,5'):
+    def begin_display(self, id=None, pausa = 0.8, size=None):
         if id==None: id = self.trace[0]
         # Inicializa os displays
         d_word = display(self.display_word(id),display_id=True)
         d_DFA = display(self.visualizar(highlight=[id[0]], size= size),display_id=True)
         return d_word, d_DFA
 
-    def display_id(self, id, d_word, d_DFA, pausa = 0.8, pausa_entre_ids = 0, size='8,5'):
+    def display_id(self, id, d_word, d_DFA, pausa = 0.8, pausa_entre_ids = 0, size=None):
       if(pausa_entre_ids>0):
         d_DFA.update(self.visualizar(highlight=[], size= size))
         sleep(pausa_entre_ids)
@@ -399,9 +399,9 @@ class DFA: # Deterministic Finete Automata
       sleep(pausa)
 
 
-    def simular(self, word='', pausa = 0.8, size='8,5'):
+    def simular(self, word='', pausa = 0.8, size=None):
       self.simulate(word=word, pausa = pausa, size=size)
-    def simulate(self, word='', pausa = 0.8, size='8,5'):
+    def simulate(self, word='', pausa = 0.8, size=None):
       layout = widgets.Layout(width='750px')
       speed = widgets.FloatSlider(
           value=0.8,

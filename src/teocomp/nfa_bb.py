@@ -247,10 +247,10 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = '', size='8,5'):             
+    def trace_visualizar(self,highlight=[], nfa_name = '', size=None):             
         return self.trace_display(highlight=highlight, nfa_name = nfa_name, size=size)
 
-    def trace_display(self,highlight=[], nfa_name = '', size='8,5'):             
+    def trace_display(self,highlight=[], nfa_name = '', size=None):             
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
@@ -290,10 +290,10 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
       display('Acertou {:.2f}% ({} de {})'.format(acertos/casos*100, acertos, casos))
       display(df)
 
-    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '',size='8,5'):             
+    def visualizar(self,highlight=[],highlightNonDeterministic=False, label = '',size=None):             
       return self.display(highlight=highlight,highlightNonDeterministic=highlightNonDeterministic, label = label,size=size)
 
-    def display(self,highlight=[],highlightNonDeterministic=False, label = '',size='8,5'): 
+    def display(self,highlight=[],highlightNonDeterministic=False, label = '',size=None): 
         f = Digraph('finite automata '+label, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:
