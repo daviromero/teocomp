@@ -143,6 +143,15 @@ class NFA: # Non-Deterministic Finete Automata
       return trace[-1][0] in self.acceptStates and trace[-1][1]==len(self.word)
 
 
+    def len_states(self):
+      return len(self.states)
+
+    def len_transition(self):
+      total = 0
+      for (s,a) in self.transition:
+        total += len(self.transition[s,a])
+      return total
+
     def aceita(self,word):
       return self.accept(word)
 

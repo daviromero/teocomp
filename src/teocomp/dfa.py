@@ -231,6 +231,12 @@ class DFA: # Deterministic Finete Automata
         else:
           #self.traces.append((set(),input[-1]))
           return None
+          
+    def len_states(self):
+      return len(self.states)
+
+    def len_transition(self):
+      return len( self.transition)
 
     def aceita(self,palavra):
       return self.accept(palavra)

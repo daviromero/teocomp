@@ -161,6 +161,20 @@ class NFA_BB: # Non-Deterministic Finete Automata with Epsilon Transition with B
     def trace_accept(self, trace):
       return trace[-1][0]==self and trace[-1][1] in self.acceptStates and trace[-1][2]==len(self.word)
 
+    def len_states(self):
+      total = len(self.states)#-len(self.NFAs)
+      for nfa in self.NFAs:
+        total += nfa.len_states()
+      return total      
+
+    def len_transition(self):
+      total = 0
+      for (s,a) in self.transition:
+        total += len(self.transition[s,a])
+      for nfa in self.NFAs:
+        total += nfa.len_transition()
+      return total
+    
     def accept(self,word):
       self.word = word
       self.trace = []
