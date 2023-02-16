@@ -22,7 +22,8 @@ setup(
         'graphviz',
         'pandas',
         'ipywidgets',
-        'xmltodict'
+        'xmltodict', 
+        'ruamel.yaml'
       ],
 
 )
