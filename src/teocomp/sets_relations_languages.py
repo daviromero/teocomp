@@ -86,6 +86,13 @@ def intersectionSets(*args):
       R = R.intersection(args[i])
     return R
 
+def produto_cartesiano(A, size):
+  R = set()
+  A = list(A)  
+  for i in range(len(A)**size):
+    R.add(tuple([A[i // (len(A)**(size-j-1)) % len(A)] for j in range(size)]))
+  return R
+
 def produtoCartesiano(A1, A2):
   R = set()
   for a1 in A1:
