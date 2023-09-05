@@ -324,7 +324,7 @@ class NFA: # Non-Deterministic Finete Automata
             f.edge(str(index-1),str(index),label=self.word[pos-1])
         return f
 
-    def resultados_visualizar(self, casos_testes):
+    def exibir_resultados(self, casos_testes):
       self.display_results(cases_test=casos_testes)
 
     def display_results(self, cases_test):
