@@ -299,10 +299,10 @@ class NFA: # Non-Deterministic Finete Automata
     def traces_to_deduction_print(self):
       print('\n\n'.join(self.traces_to_deduction()))
 
-    def trace_visualizar(self,highlight=[], nfa_name = '',size=None):             
-        return self.trace_display(highlight=highlight, nfa_name = nfa_name,size=size)
+    def trace_visualizar(self,nfa_name = '',size=None):             
+        return self.trace_display(nfa_name = nfa_name,size=size)
 
-    def trace_display(self,highlight=[], nfa_name = '',size=None):             
+    def trace_display(self, nfa_name = '',size=None):             
         f = Digraph('finite automata '+nfa_name, filename='nfa.gv')
         f.attr(rankdir='LR')
         if size!=None:

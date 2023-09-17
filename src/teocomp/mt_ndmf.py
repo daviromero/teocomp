@@ -351,9 +351,11 @@ class MTNDMF: # Máquina de Turing Não-Determinística Multi-fita
 
         return s      
 
-    def visualizar(self,blank_as=S_BLK_BOX,highlight=[],highlightNonDeterministic=False, turing_name = ''):             
+    def visualizar(self,blank_as=S_BLK_BOX,highlight=[],highlightNonDeterministic=False, turing_name = '', size=None):             
         f = Digraph('turing machine '+turing_name, filename='tm.gv')
-        f.attr(rankdir='LR', size='8,5')
+        f.attr(rankdir='LR')
+        if size!=None:
+          f.attr(size=size)
  
         f.attr('node', shape='point')
         f.node('')
